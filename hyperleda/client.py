@@ -14,11 +14,22 @@ class HyperLedaClient:
     """
 
     # TODO: credentials
-    def __init__(self, endpoint: str = config.DEFAULT_ENDPOINT) -> None:
+    def __init__(self, endpoint: str = config.DEFAULT_ENDPOINT, token: str | None = None) -> None:
         self.endpoint = endpoint
+        self.token = token
+
+    def _set_auth(self, headers: dict[str, str]) -> dict[str, str]:
+        if self.token is not None:
+            headers["Authorization"] = f"Bearer {self.token}"
+
+        return headers
 
     def _post(self, path: str, request: Any) -> dict[str, Any]:
-        response = requests.post(f"{self.endpoint}{path}", json=dataclasses.asdict(request))
+        headers = {}
+        if path.startswith("/api/v1/admin"):
+            headers = self._set_auth(headers)
+
+        response = requests.post(f"{self.endpoint}{path}", json=dataclasses.asdict(request), headers=headers)
 
         if not response.ok:
             raise error.APIError.from_dict(response.json())
@@ -26,7 +37,11 @@ class HyperLedaClient:
         return response.json()
 
     def _get(self, path: str, query: dict[str, str]) -> dict[str, Any]:
-        response = requests.get(f"{self.endpoint}{path}", params=query)
+        headers = {}
+        if path.startswith("/api/v1/admin"):
+            headers = self._set_auth(headers)
+
+        response = requests.get(f"{self.endpoint}{path}", params=query, headers=headers)
 
         if not response.ok:
             raise error.APIError.from_dict(response.json())
