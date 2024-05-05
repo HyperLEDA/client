@@ -20,6 +20,10 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Astronomy",
     "Topic :: Scientific/Engineering :: Physics",
 ]
+dependencies = [
+    "pandas ~= 2.2.2",
+    "requests ~= 2.31.0",
+]
 
 
 [project.urls]
