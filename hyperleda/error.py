@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class APIError(Exception):
     code: str
     status: int
