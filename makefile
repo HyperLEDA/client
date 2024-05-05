@@ -10,6 +10,15 @@ install:
 build:
 	$(PYTHON) -m build .
 
+# to use the model one needs to start the server on localhost:8000
+generate-model:
+	mkdir -p hyperleda/gen
+	curl localhost:8000/api/docs/swagger.json > hyperleda/gen/swagger.json
+	datamodel-codegen --input hyperleda/gen/swagger.json --output hyperleda/model.py --output-model-type dataclasses.dataclass --input-file-type openapi
+	make fix
+
+# Testing
+
 check: check-format check-lint
 
 check-format:
@@ -25,5 +34,3 @@ fix-format:
 
 fix-lint:
 	$(PYTHON) -m ruff check --config=pyproject.toml --fix --unsafe-fixes
-
-# TODO: add target to autogenerate models for client

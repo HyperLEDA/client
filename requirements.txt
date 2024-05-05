@@ -1,4 +1,5 @@
 build
+datamodel-code-generator
 pandas
 ruff
 requests
