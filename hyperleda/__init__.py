@@ -1,3 +1,3 @@
-from src.client import HyperLedaClient
+from hyperleda.client import HyperLedaClient
 
 __all__ = ["HyperLedaClient"]
