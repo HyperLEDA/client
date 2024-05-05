@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -16,15 +16,15 @@ class PingRequestSchema:
 
 @dataclass
 class PingResponseSchema:
-    ping: Optional[str] = None
+    ping: str | None = None
 
 
 @dataclass
 class CreateSourceRequestSchema:
-    bibcode: Optional[str] = None
-    title: Optional[str] = None
-    authors: Optional[List[str]] = None
-    year: Optional[int] = None
+    bibcode: str | None = None
+    title: str | None = None
+    authors: list[str] | None = None
+    year: int | None = None
 
 
 @dataclass
@@ -42,21 +42,21 @@ class PageSize(Enum):
 @dataclass
 class GetSourceListRequestSchema:
     title: str
-    page_size: Optional[PageSize] = 20
-    page: Optional[int] = 0
+    page_size: PageSize | None = 20
+    page: int | None = 0
 
 
 @dataclass
 class GetSourceResponse:
-    bibcode: Optional[str] = None
-    title: Optional[str] = None
-    authors: Optional[List[str]] = None
-    year: Optional[int] = None
+    bibcode: str | None = None
+    title: str | None = None
+    authors: list[str] | None = None
+    year: int | None = None
 
 
 @dataclass
 class GetSourceListResponseSchema:
-    sources: Optional[List[GetSourceResponse]] = None
+    sources: list[GetSourceResponse] | None = None
 
 
 @dataclass
@@ -66,10 +66,10 @@ class GetSourceRequestSchema:
 
 @dataclass
 class GetSourceResponseSchema:
-    bibcode: Optional[str] = None
-    title: Optional[str] = None
-    authors: Optional[List[str]] = None
-    year: Optional[int] = None
+    bibcode: str | None = None
+    title: str | None = None
+    authors: list[str] | None = None
+    year: int | None = None
 
 
 class PageSize1(Enum):
@@ -81,46 +81,46 @@ class PageSize1(Enum):
 @dataclass
 class SearchCatalogsRequestSchema:
     query: str
-    page_size: Optional[PageSize1] = 10
+    page_size: PageSize1 | None = 10
 
 
 @dataclass
 class Field:
-    id: Optional[str] = None
-    description: Optional[str] = None
-    unit: Optional[str] = None
+    id: str | None = None
+    description: str | None = None
+    unit: str | None = None
 
 
 @dataclass
 class Table:
-    id: Optional[str] = None
-    num_rows: Optional[int] = None
-    fields: Optional[List[Field]] = None
+    id: str | None = None
+    num_rows: int | None = None
+    fields: list[Field] | None = None
 
 
 @dataclass
 class Catalog:
-    id: Optional[str] = None
-    description: Optional[str] = None
-    url: Optional[str] = None
-    bibcode: Optional[str] = None
-    tables: Optional[List[Table]] = None
+    id: str | None = None
+    description: str | None = None
+    url: str | None = None
+    bibcode: str | None = None
+    tables: list[Table] | None = None
 
 
 @dataclass
 class SearchCatalogsResponseSchema:
-    catalogs: Optional[List[Catalog]] = None
+    catalogs: list[Catalog] | None = None
 
 
 @dataclass
 class StartTaskRequestSchema:
     task_name: str
-    payload: Optional[Dict[str, Any]] = None
+    payload: dict[str, Any] | None = None
 
 
 @dataclass
 class StartTaskResponseSchema:
-    id: Optional[int] = None
+    id: int | None = None
 
 
 @dataclass
@@ -130,22 +130,22 @@ class GetTaskInfoRequestSchema:
 
 @dataclass
 class GetTaskInfoResponseSchema:
-    id: Optional[int] = None
-    task_name: Optional[str] = None
-    status: Optional[str] = None
-    payload: Optional[Dict[str, Any]] = None
-    start_time: Optional[str] = None
-    end_time: Optional[str] = None
-    message: Optional[Dict[str, Any]] = None
+    id: int | None = None
+    task_name: str | None = None
+    status: str | None = None
+    payload: dict[str, Any] | None = None
+    start_time: str | None = None
+    end_time: str | None = None
+    message: dict[str, Any] | None = None
 
 
 class DataType(Enum):
-    str = 'str'
-    string = 'string'
-    int = 'int'
-    integer = 'integer'
-    float = 'float'
-    double = 'double'
+    str = "str"
+    string = "string"
+    int = "int"
+    integer = "integer"
+    float = "float"
+    double = "double"
 
 
 @dataclass
@@ -153,34 +153,34 @@ class ColumnDescription:
     name: str
     data_type: DataType
     unit: str
-    description: Optional[str] = None
+    description: str | None = None
 
 
 class Datatype(Enum):
-    regular = 'regular'
-    reprocessing = 'reprocessing'
-    preliminary = 'preliminary'
-    compilation = 'compilation'
+    regular = "regular"
+    reprocessing = "reprocessing"
+    preliminary = "preliminary"
+    compilation = "compilation"
 
 
 @dataclass
 class CreateTableRequestSchema:
     table_name: str
-    columns: List[ColumnDescription]
+    columns: list[ColumnDescription]
     bibliography_id: int
-    datatype: Optional[Datatype] = Datatype.regular
-    description: Optional[str] = None
+    datatype: Datatype | None = Datatype.regular
+    description: str | None = None
 
 
 @dataclass
 class CreateTableResponseSchema:
-    id: Optional[int] = None
+    id: int | None = None
 
 
 @dataclass
 class AddDataRequestSchema:
     table_id: int
-    data: List[Dict[str, Any]]
+    data: list[dict[str, Any]]
 
 
 @dataclass
@@ -196,4 +196,4 @@ class LoginRequestSchema:
 
 @dataclass
 class LoginResponseSchema:
-    token: Optional[str] = None
+    token: str | None = None
