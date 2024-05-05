@@ -4,7 +4,7 @@ from typing import Any
 import pandas
 import requests
 
-from src import config, error, model
+from hyperleda import config, error, model
 
 
 class HyperLedaClient:
