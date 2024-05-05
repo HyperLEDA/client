@@ -1,0 +1,5 @@
+build
+pandas
+ruff
+requests
+setuptools
