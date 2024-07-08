@@ -1,5 +1,4 @@
-from hyperleda import config, model
 from hyperleda.client import HyperLedaClient
+from hyperleda.config import *
 from hyperleda.error import APIError
-
-__all__ = ["HyperLedaClient", "model", "APIError", "config"]
+from hyperleda.model import *
