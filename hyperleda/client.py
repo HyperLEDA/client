@@ -13,7 +13,6 @@ class HyperLedaClient:
     and, if authentication information is present, add new data.
     """
 
-    # TODO: credentials
     def __init__(self, endpoint: str = config.DEFAULT_ENDPOINT, token: str | None = None) -> None:
         self.endpoint = endpoint
         self.token = token
@@ -48,26 +47,17 @@ class HyperLedaClient:
 
         return response.json()
 
-    def create_bibliography(self, bibcode: str, title: str, authors: list[str], year: int) -> int:
+    def create_internal_source(self, title: str, authors: list[str], year: int) -> str:
         """
-        Create new bibliography entry in the database. For now one must enter both bibcode and
-        other metadata about the article in order for it co be created correctly. In future integration
-        with NASA ADS is planned which will remove necessity for separate title, author and year specification.
+        Creates new source entry in the database for internal communication and unpublished articles.
+        Responds with internally generated code for the source which can be used as bibcode in other methods.
         """
         data = self._post(
             "/api/v1/admin/source",
-            model.CreateSourceRequestSchema(bibcode=bibcode, title=title, authors=authors, year=year),
+            model.CreateSourceRequestSchema(title=title, authors=authors, year=year),
         )
 
-        return model.CreateSourceResponseSchema(**data["data"]).id
-
-    def get_bibliography(self, bibliography_id: int) -> model.GetSourceResponseSchema:
-        """
-        Obtain information about the bibliography data registered in HyperLeda.
-        """
-        data = self._get("/api/v1/source", {"id": bibliography_id})
-
-        return model.GetSourceResponseSchema(**data["data"])
+        return model.CreateSourceResponseSchema(**data["data"]).code
 
     def create_table(self, table_description: model.CreateTableRequestSchema) -> int:
         """
