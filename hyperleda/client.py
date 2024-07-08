@@ -1,10 +1,33 @@
 import dataclasses
+import enum
+import json
 from typing import Any
 
 import pandas
 import requests
 
 from hyperleda import config, error, model
+
+
+def _clean_dict(d):
+    """
+    Recursively remove keys with None values from the dictionary.
+    """
+    clean = {}
+    for k, v in d.items():
+        if isinstance(v, dict):
+            nested = _clean_dict(v)
+            if nested:  # Only add non-empty nested dictionaries
+                clean[k] = nested
+        elif v is not None:
+            clean[k] = v
+    return clean
+
+
+def _marshaller(obj):
+    if isinstance(obj, enum.Enum):
+        return obj.value
+    return str(obj)
 
 
 class HyperLedaClient:
@@ -17,31 +40,28 @@ class HyperLedaClient:
         self.endpoint = endpoint
         self.token = token
 
-    def _set_auth(self, headers: dict[str, str]) -> dict[str, str]:
-        if self.token is not None:
-            headers["Authorization"] = f"Bearer {self.token}"
-
-        return headers
-
-    def _post(self, path: str, request: Any) -> dict[str, Any]:
+    def _request(
+        self, method: str, path: str, body: dict[str, Any] | None = None, query: dict[str, str] | None = None
+    ) -> dict[str, Any]:
         headers = {}
         if path.startswith("/api/v1/admin"):
-            headers = self._set_auth(headers)
+            if self.token is not None:
+                headers["Authorization"] = f"Bearer {self.token}"
 
-        response = requests.post(f"{self.endpoint}{path}", json=dataclasses.asdict(request), headers=headers)
+        kwargs = {}
 
-        if not response.ok:
-            raise error.APIError.from_dict(response.json())
+        if body is not None:
+            body = _clean_dict(body) if body is not None else None
+            data = json.dumps(body, default=_marshaller)
+            kwargs["data"] = data
 
-        return response.json()
+        if query is not None:
+            kwargs["params"] = query
 
-    def _get(self, path: str, query: dict[str, str]) -> dict[str, Any]:
-        headers = {}
-        if path.startswith("/api/v1/admin"):
-            headers = self._set_auth(headers)
+        if len(headers) != 0:
+            kwargs["headers"] = headers
 
-        response = requests.get(f"{self.endpoint}{path}", params=query, headers=headers)
-
+        response = requests.request(method, f"{self.endpoint}{path}", **kwargs)
         if not response.ok:
             raise error.APIError.from_dict(response.json())
 
@@ -52,9 +72,10 @@ class HyperLedaClient:
         Creates new source entry in the database for internal communication and unpublished articles.
         Responds with internally generated code for the source which can be used as bibcode in other methods.
         """
-        data = self._post(
+        data = self._request(
+            "POST",
             "/api/v1/admin/source",
-            model.CreateSourceRequestSchema(title=title, authors=authors, year=year),
+            dataclasses.asdict(model.CreateSourceRequestSchema(title=title, authors=authors, year=year)),
         )
 
         return model.CreateSourceResponseSchema(**data["data"]).code
@@ -63,9 +84,10 @@ class HyperLedaClient:
         """
         Create new table with raw data from the source.
         """
-        data = self._post(
+        data = self._request(
+            "POST",
             "/api/v1/admin/table",
-            table_description,
+            dataclasses.asdict(table_description),
         )
 
         return model.CreateTableResponseSchema(**data["data"]).id
@@ -74,7 +96,8 @@ class HyperLedaClient:
         """
         Add new data to the table created in `create_table` method.
         """
-        _ = self._post(
+        _ = self._request(
+            "POST",
             "/api/v1/admin/table/data",
-            model.AddDataRequestSchema(table_id, data.to_dict("records")),
+            dataclasses.asdict(model.AddDataRequestSchema(table_id, data.to_dict("records"))),
         )

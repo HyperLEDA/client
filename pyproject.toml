@@ -38,6 +38,7 @@ ignore = [
     "N818", # ignore SomeException -> SomeError rule
     "B024", # abstract class without abstract methods
     "B017", # ignore assertRaises(Exception)
+    "F401", # star imports
 ]
 # see https://docs.astral.sh/ruff/rules/ for description of each rule set.
 select = [
