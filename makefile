@@ -13,7 +13,7 @@ build:
 # to use the model one needs to start the server on localhost:8000
 generate-model:
 	mkdir -p hyperleda/gen
-	curl localhost:8000/api/docs/swagger.json > hyperleda/gen/swagger.json
+	curl localhost:8080/api/docs/swagger.json > hyperleda/gen/swagger.json
 	datamodel-codegen --input hyperleda/gen/swagger.json --output hyperleda/model.py --output-model-type dataclasses.dataclass --input-file-type openapi
 	make fix
 
