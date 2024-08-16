@@ -4,7 +4,7 @@ import pandas
 
 import hyperleda
 
-client = hyperleda.HyperLedaClient()
+client = hyperleda.HyperLedaClient(endpoint=hyperleda.TEST_ENDPOINT)
 
 table_name = f"test_table_{random.randrange(0, 100000)}"
 
@@ -15,12 +15,14 @@ table_id = client.create_table(
             hyperleda.ColumnDescription(
                 name="ra",
                 data_type=hyperleda.DataType("double"),
+                ucd="pos.eq.ra",
                 unit="deg",
                 description="Right ascension",
             ),
             hyperleda.ColumnDescription(
                 name="dec",
                 data_type=hyperleda.DataType("double"),
+                ucd="pos.eq.dec",
                 unit="deg",
                 description="Declination",
             ),

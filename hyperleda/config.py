@@ -1,1 +1,2 @@
-DEFAULT_ENDPOINT = "http://localhost:8000"
+DEFAULT_ENDPOINT = "http://localhost:8080"
+TEST_ENDPOINT = "http://89.169.133.242"

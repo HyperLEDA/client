@@ -10,7 +10,7 @@ install:
 build:
 	$(PYTHON) -m build .
 
-# to use the model one needs to start the server on localhost:8000
+# to use the model one needs to start the server on localhost:8080
 generate-model:
 	mkdir -p hyperleda/gen
 	curl localhost:8080/api/docs/swagger.json > hyperleda/gen/swagger.json
