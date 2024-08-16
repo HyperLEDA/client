@@ -84,7 +84,8 @@ class DataType(Enum):
 class ColumnDescription:
     name: str
     data_type: DataType
-    unit: str
+    unit: str | None = None
+    ucd: str | None = None
     description: str | None = None
 
 
