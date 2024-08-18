@@ -74,10 +74,17 @@ class GetTaskInfoResponseSchema:
 class DataType(Enum):
     str = "str"
     string = "string"
+    character_varying = "character varying"
+    character = "character"
     int = "int"
     integer = "integer"
+    smallint = "smallint"
     float = "float"
     double = "double"
+    double_precision = "double precision"
+    real = "real"
+    bit = "bit"
+    timestamp = "timestamp without time zone"
 
 
 @dataclass
