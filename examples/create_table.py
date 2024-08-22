@@ -26,6 +26,15 @@ table_id = client.create_table(
                 unit="deg",
                 description="Declination",
             ),
+            hyperleda.ColumnDescription(
+                name="id",
+                data_type=hyperleda.DataType.str,
+                ucd="meta.id;meta.main",
+            ),
+            hyperleda.ColumnDescription(
+                name="obscure_column",
+                data_type=hyperleda.DataType.float,
+            ),
         ],
         bibcode="1992ApJ...400L...1W",
     )
@@ -38,10 +47,13 @@ data = pandas.DataFrame(
         {
             "ra": 123.45,
             "dec": 25.56,
+            "id": "1234-haha",
         },
         {
             "ra": 52.1,
             "dec": 65.58,
+            "id": "4321-ahah",
+            "obscure_column": 0.00647372
         },
     ]
 )
