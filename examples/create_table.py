@@ -49,12 +49,7 @@ data = pandas.DataFrame(
             "dec": 25.56,
             "id": "1234-haha",
         },
-        {
-            "ra": 52.1,
-            "dec": 65.58,
-            "id": "4321-ahah",
-            "obscure_column": 0.00647372
-        },
+        {"ra": 52.1, "dec": 65.58, "id": "4321-1234", "obscure_column": 0.00647372},
     ]
 )
 
