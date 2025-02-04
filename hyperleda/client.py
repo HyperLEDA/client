@@ -120,15 +120,39 @@ class HyperLedaClient:
         data = self._request(
             "GET",
             "/api/v1/table/status/stats",
+            query={"table_id": str(table_id)},
         )
         return model.TableStatusStatsResponseSchema(**data["data"])
 
     def set_table_status(self, table_id: int, overrides: list[model.Overrides] | None = None) -> None:
         """
-        Set status of the table.
+        Moves objects that were cross identified successfully to the homogenous part of the
+        database. If `overrides` is provided, will manually set status the provided object.
         """
         _ = self._request(
             "POST",
             "/api/v1/admin/table/status",
             dataclasses.asdict(model.SetTableStatusRequestSchema(table_id, overrides)),
+        )
+
+    def validate_table(self, table_id: int) -> model.GetTableValidationResponseSchema:
+        """
+        Validate the table data. Checks if all objects were cross-identified and if there are
+        any duplicates.
+        """
+        data = self._request(
+            "GET",
+            "/api/v1/admin/table/validation",
+            query={"table_id": str(table_id)},
+        )
+        return model.GetTableValidationResponseSchema(**data["data"])
+
+    def patch_table_schema(self, table_id, actions: list) -> None:
+        """
+        Patch table schema with provided actions. For example, change UCD or unit of the column.
+        """
+        _ = self._request(
+            "PATCH",
+            "/api/v1/admin/table",
+            dataclasses.asdict(model.PatchTableRequestSchema(table_id, actions)),
         )
