@@ -101,3 +101,34 @@ class HyperLedaClient:
             "/api/v1/admin/table/data",
             dataclasses.asdict(model.AddDataRequestSchema(table_id, data.to_dict("records"))),
         )
+
+    def start_processing(self, table_id: int) -> None:
+        """
+        Start processing the table data. Processing includes cross-identification of objects.
+        """
+        _ = self._request(
+            "POST",
+            "/api/v1/admin/table/process",
+            dataclasses.asdict(model.TableProcessRequestSchema(table_id)),
+        )
+
+    def get_table_status_stats(self, table_id: int) -> model.TableStatusStatsResponseSchema:
+        """
+        Get statistics of cross identification of the table. Shows the total number of objects
+        in each status.
+        """
+        data = self._request(
+            "GET",
+            "/api/v1/table/status/stats",
+        )
+        return model.TableStatusStatsResponseSchema(**data["data"])
+
+    def set_table_status(self, table_id: int, overrides: list[model.Overrides] | None = None) -> None:
+        """
+        Set status of the table.
+        """
+        _ = self._request(
+            "POST",
+            "/api/v1/admin/table/status",
+            dataclasses.asdict(model.SetTableStatusRequestSchema(table_id, overrides)),
+        )

@@ -1,14 +1,10 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "hyperleda"
 description = "Hyperleda web-service client"
 readme = "README.md"
 license = { file = "LICENSE" }
 version = "0.1.0"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 authors = [{ name = "HyperLeda Team" }]
 keywords = ["hyperleda", "astronomy", "extragalactic"]
 classifiers = [
@@ -20,11 +16,21 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Astronomy",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-dependencies = ["pandas", "requests"]
-
+dependencies = [
+    "build>=1.2.2.post1",
+    "datamodel-code-generator>=0.26.5",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
+    "ruff>=0.9.4",
+    "setuptools>=75.8.0",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/HyperLEDA/client"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 120
