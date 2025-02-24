@@ -44,7 +44,7 @@ class HyperLedaClient:
         self, method: str, path: str, body: dict[str, Any] | None = None, query: dict[str, str] | None = None
     ) -> dict[str, Any]:
         headers = {}
-        if path.startswith("/api/v1/admin"):
+        if path.startswith("/admin/api/v1/admin"):
             if self.token is not None:
                 headers["Authorization"] = f"Bearer {self.token}"
 
@@ -74,7 +74,7 @@ class HyperLedaClient:
         """
         data = self._request(
             "POST",
-            "/api/v1/admin/source",
+            "/admin/api/v1/source",
             dataclasses.asdict(model.CreateSourceRequestSchema(title=title, authors=authors, year=year)),
         )
 
@@ -86,7 +86,7 @@ class HyperLedaClient:
         """
         data = self._request(
             "POST",
-            "/api/v1/admin/table",
+            "/admin/api/v1/table",
             dataclasses.asdict(table_description),
         )
 
@@ -98,7 +98,7 @@ class HyperLedaClient:
         """
         _ = self._request(
             "POST",
-            "/api/v1/admin/table/data",
+            "/admin/api/v1/table/data",
             dataclasses.asdict(model.AddDataRequestSchema(table_id, data.to_dict("records"))),
         )
 
@@ -108,7 +108,7 @@ class HyperLedaClient:
         """
         _ = self._request(
             "POST",
-            "/api/v1/admin/table/process",
+            "/admin/api/v1/table/process",
             dataclasses.asdict(model.TableProcessRequestSchema(table_id)),
         )
 
@@ -119,7 +119,7 @@ class HyperLedaClient:
         """
         data = self._request(
             "GET",
-            "/api/v1/table/status/stats",
+            "/admin/api/v1/table/status/stats",
             query={"table_id": str(table_id)},
         )
         return model.TableStatusStatsResponseSchema(**data["data"])
@@ -131,7 +131,7 @@ class HyperLedaClient:
         """
         _ = self._request(
             "POST",
-            "/api/v1/admin/table/status",
+            "/admin/api/v1/table/status",
             dataclasses.asdict(model.SetTableStatusRequestSchema(table_id, overrides)),
         )
 
@@ -142,7 +142,7 @@ class HyperLedaClient:
         """
         data = self._request(
             "GET",
-            "/api/v1/admin/table/validation",
+            "/admin/api/v1/table/validation",
             query={"table_id": str(table_id)},
         )
         return model.GetTableValidationResponseSchema(**data["data"])
@@ -153,6 +153,6 @@ class HyperLedaClient:
         """
         _ = self._request(
             "PATCH",
-            "/api/v1/admin/table",
+            "/admin/api/v1/table",
             dataclasses.asdict(model.PatchTableRequestSchema(table_id, actions)),
         )
