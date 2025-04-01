@@ -135,7 +135,7 @@ class HyperLedaClient:
             dataclasses.asdict(model.SetTableStatusRequestSchema(table_id, overrides)),
         )
 
-    def validate_table(self, table_id: int) -> model.GetTableValidationResponseSchema:
+    def validate_table(self, table_name: str) -> model.GetTableValidationResponseSchema:
         """
         Validate the table data. Checks if all objects were cross-identified and if there are
         any duplicates.
@@ -143,7 +143,7 @@ class HyperLedaClient:
         data = self._request(
             "GET",
             "/admin/api/v1/table/validation",
-            query={"table_id": str(table_id)},
+            query={"table_name": str(table_name)},
         )
         return model.GetTableValidationResponseSchema(**data["data"])
 
