@@ -103,7 +103,7 @@ class PatchTableAction:
 
 @dataclass
 class PatchTableRequestSchema:
-    table_id: int
+    table_name: str
     actions: list[PatchTableAction]
 
 

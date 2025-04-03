@@ -147,12 +147,12 @@ class HyperLedaClient:
         )
         return model.GetTableValidationResponseSchema(**data["data"])
 
-    def patch_table_schema(self, table_id, actions: list) -> None:
+    def patch_table_schema(self, table_name: str, actions: list) -> None:
         """
         Patch table schema with provided actions. For example, change UCD or unit of the column.
         """
         _ = self._request(
             "PATCH",
             "/admin/api/v1/table",
-            dataclasses.asdict(model.PatchTableRequestSchema(table_id, actions)),
+            dataclasses.asdict(model.PatchTableRequestSchema(table_name, actions)),
         )
