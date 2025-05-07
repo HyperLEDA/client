@@ -63,7 +63,11 @@ class HyperLedaClient:
 
         response = requests.request(method, f"{self.endpoint}{path}", **kwargs)
         if not response.ok:
-            raise error.APIError.from_dict(response.json())
+            try:
+                msg = error.APIError.from_dict(response.json())
+            except Exception:
+                msg = error.APIError(response.status_code, response.text)
+            raise msg
 
         return response.json()
 
@@ -155,4 +159,11 @@ class HyperLedaClient:
             "PATCH",
             "/admin/api/v1/table",
             dataclasses.asdict(model.PatchTableRequestSchema(table_name, actions)),
+        )
+
+    def create_homogenization_rules(self, rules: list[model.HomogenizationRule]) -> None:
+        _ = self._request(
+            "POST",
+            "/admin/api/v1/table/homogenization/rules",
+            dataclasses.asdict(model.CreateHomogenizationRulesRequestSchema(rules)),
         )
