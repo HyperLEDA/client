@@ -6,24 +6,7 @@ from typing import Any
 import pandas
 import requests
 
-from hyperleda import config, error, model
-
-
-def _clean_dict(d):
-    """
-    Recursively remove keys with None values from the dictionary.
-    """
-    clean = {}
-    for k, v in d.items():
-        if isinstance(v, dict):
-            nested = _clean_dict(v)
-            if nested:  # Only add non-empty nested dictionaries
-                clean[k] = nested
-        elif isinstance(v, list):
-            clean[k] = [_clean_dict(item) for item in v]
-        elif v is not None:
-            clean[k] = v
-    return clean
+from hyperleda import config, error, model, utils
 
 
 def _marshaller(obj):
@@ -53,7 +36,7 @@ class HyperLedaClient:
         kwargs = {}
 
         if body is not None:
-            body = _clean_dict(body) if body is not None else None
+            body = utils.clean_dict(body) if body is not None else None
             data = json.dumps(body, default=_marshaller)
             kwargs["data"] = data
 
