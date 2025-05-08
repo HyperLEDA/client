@@ -19,6 +19,8 @@ def _clean_dict(d):
             nested = _clean_dict(v)
             if nested:  # Only add non-empty nested dictionaries
                 clean[k] = nested
+        elif isinstance(v, list):
+            clean[k] = [_clean_dict(item) for item in v]
         elif v is not None:
             clean[k] = v
     return clean
