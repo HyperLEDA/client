@@ -164,6 +164,6 @@ class HyperLedaClient:
     def create_homogenization_rules(self, rules: list[model.HomogenizationRule]) -> None:
         _ = self._request(
             "POST",
-            "/admin/api/v1/table/homogenization/rules",
+            "/admin/api/v1/homogenization/rules",
             dataclasses.asdict(model.CreateHomogenizationRulesRequestSchema(rules)),
         )
