@@ -146,9 +146,9 @@ class HyperLedaClient:
             dataclasses.asdict(model.PatchTableRequestSchema(table_name, actions)),
         )
 
-    def create_homogenization_rules(self, rules: list[model.Catalog]) -> None:
+    def create_marking(self, table_name: str, rules: list[model.Catalog]) -> None:
         _ = self._request(
             "POST",
-            "/admin/api/v1/homogenization/rules",
-            dataclasses.asdict(model.CreateHomogenizationRulesRequestSchema(rules)),
+            "/admin/api/v1/marking",
+            dataclasses.asdict(model.CreateMarkingRequestSchema(table_name, rules)),
         )
