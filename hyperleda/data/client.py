@@ -1,6 +1,8 @@
 import dataclasses
 from typing import Any
 
+import dacite
+
 from hyperleda import common, config
 from hyperleda.data import model
 
@@ -10,7 +12,7 @@ class HyperLedaDataClient:
     Client for the HyperLeda data API, providing access to public query endpoints.
     """
 
-    def __init__(self, endpoint: str = config.DEFAULT_ENDPOINT):
+    def __init__(self, endpoint: str = config.PROD_ENDPOINT):
         self.endpoint = endpoint
 
     def _request(self, method: str, path: str, query: dict[str, Any] | None = None, stream: bool = False) -> Any:
@@ -26,7 +28,8 @@ class HyperLedaDataClient:
             query=dataclasses.asdict(req),
         )
         data = response.json()
-        return model.QuerySimpleResponseSchema(**data["data"])
+
+        return dacite.from_dict(model.QuerySimpleResponseSchema, data["data"])
 
     def query(self, req: model.QueryRequestSchema) -> model.QueryResponseSchema:
         """
