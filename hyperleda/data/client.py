@@ -1,8 +1,6 @@
 import dataclasses
 from typing import Any
 
-import dacite
-
 from hyperleda import common, config
 from hyperleda.data import model
 
@@ -25,11 +23,11 @@ class HyperLedaDataClient:
         response = self._request(
             "GET",
             "/api/v1/query/simple",
-            query=dataclasses.asdict(req),
+            query=req.model_dump(),
         )
         data = response.json()
 
-        return dacite.from_dict(model.QuerySimpleResponseSchema, data["data"])
+        return model.QuerySimpleResponseSchema.model_validate(data["data"])
 
     def query(self, req: model.QueryRequestSchema) -> model.QueryResponseSchema:
         """

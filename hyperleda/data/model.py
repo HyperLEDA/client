@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import Enum
 
+from pydantic import BaseModel
 
-@dataclass
-class QuerySimpleRequestSchema:
+
+class QuerySimpleRequestSchema(BaseModel):
     pgcs: list[int] | None = None
     ra: float | None = None
     dec: float | None = None
@@ -21,123 +21,104 @@ class QuerySimpleRequestSchema:
     page: int | None = 0
 
 
-@dataclass
-class Designation:
+class Designation(BaseModel):
     name: str
 
 
-@dataclass
-class EquatorialCoordinates:
+class EquatorialCoordinates(BaseModel):
     ra: float
     dec: float
     e_ra: float
     e_dec: float
 
 
-@dataclass
-class GalacticCoordinates:
+class GalacticCoordinates(BaseModel):
     lon: float
     lat: float
     e_lon: float
     e_lat: float
 
 
-@dataclass
-class Coordinates:
+class Coordinates(BaseModel):
     equatorial: EquatorialCoordinates
     galactic: GalacticCoordinates
 
 
-@dataclass
-class HeliocentricVelocity:
+class HeliocentricVelocity(BaseModel):
     v: float
     e_v: float
 
 
-@dataclass
-class Redshift:
+class Redshift(BaseModel):
     z: float
     e_z: float
 
 
-@dataclass
-class Velocity:
+class Velocity(BaseModel):
     heliocentric: HeliocentricVelocity
     redshift: Redshift
 
 
-@dataclass
-class Catalogs:
+class Catalogs(BaseModel):
     designation: Designation | None = None
     coordinates: Coordinates | None = None
     velocity: Velocity | None = None
 
 
-@dataclass
-class PGCObject:
+class PGCObject(BaseModel):
     pgc: int
     catalogs: Catalogs
 
 
-@dataclass
-class EquatorialUnits:
+class EquatorialUnits(BaseModel):
     ra: str
     dec: str
     e_ra: str
     e_dec: str
 
 
-@dataclass
-class GalacticUnits:
+class GalacticUnits(BaseModel):
     lon: str
     lat: str
     e_lon: str
     e_lat: str
 
 
-@dataclass
-class CoordinateUnits:
+class CoordinateUnits(BaseModel):
     equatorial: EquatorialUnits
     galactic: GalacticUnits
 
 
-@dataclass
-class HeliocentricVelocityUnits:
+class HeliocentricVelocityUnits(BaseModel):
     v: str
     e_v: str
 
 
-@dataclass
-class VelocityUnits:
+class VelocityUnits(BaseModel):
     heliocentric: HeliocentricVelocityUnits
 
 
-@dataclass
-class Units:
+class Units(BaseModel):
     coordinates: CoordinateUnits
     velocity: VelocityUnits
 
 
-@dataclass
-class Schema:
+class Schema(BaseModel):
     units: Units
 
 
-@dataclass
-class QuerySimpleResponseSchema:
+class QuerySimpleResponseSchema(BaseModel):
     objects: list[PGCObject] | None = None
     schema: Schema | None = None
 
 
-@dataclass
-class QueryRequestSchema:
+class QueryRequestSchema(BaseModel):
     q: str | None = None
     page_size: int | None = 25
     page: int | None = 0
 
 
-@dataclass
-class QueryResponseSchema:
+class QueryResponseSchema(BaseModel):
     objects: list[PGCObject] | None = None
 
 
@@ -151,8 +132,7 @@ class PageSize2(Enum):
     integer_100000 = 100000
 
 
-@dataclass
-class FITSRequestSchema:
+class FITSRequestSchema(BaseModel):
     pgcs: list[int] | None = None
     ra: float | None = None
     dec: float | None = None
