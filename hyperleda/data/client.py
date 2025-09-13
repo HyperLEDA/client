@@ -1,4 +1,3 @@
-import dataclasses
 from typing import Any
 
 from hyperleda import common, config
@@ -36,7 +35,7 @@ class HyperLedaDataClient:
         response = self._request(
             "GET",
             "/api/v1/query",
-            query=dataclasses.asdict(req),
+            query=req.model_dump(),
         )
         data = response.json()
         return model.QueryResponseSchema(**data["data"])
@@ -48,7 +47,7 @@ class HyperLedaDataClient:
         response = self._request(
             "GET",
             "/api/v1/query/fits",
-            query=dataclasses.asdict(req),
+            query=req.model_dump(),
             stream=True,
         )
         return response.content

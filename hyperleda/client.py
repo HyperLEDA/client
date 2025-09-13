@@ -1,4 +1,3 @@
-import dataclasses
 import enum
 import json
 from typing import Any
@@ -59,36 +58,38 @@ class HyperLedaClient:
     def create_internal_source(self, title: str, authors: list[str], year: int) -> str:
         """
         Creates new source entry in the database for internal communication and unpublished articles.
-        Responds with internally generated code for the source which can be used as bibcode in other methods.
+        Responds with an internally generated code for the source which can be used as bibcode in other methods.
         """
+        request_data = model.CreateSourceRequest(title=title, authors=authors, year=year)
         data = self._request(
             "POST",
             "/admin/api/v1/source",
-            dataclasses.asdict(model.CreateSourceRequestSchema(title=title, authors=authors, year=year)),
+            request_data.model_dump(),
         )
 
-        return model.CreateSourceResponseSchema(**data["data"]).code
+        return model.CreateSourceResponse(**data["data"]).code
 
-    def create_table(self, table_description: model.CreateTableRequestSchema) -> int:
+    def create_table(self, table_description: model.CreateTableRequest) -> int:
         """
         Create new table with raw data from the source.
         """
         data = self._request(
             "POST",
             "/admin/api/v1/table",
-            dataclasses.asdict(table_description),
+            table_description.model_dump(),
         )
 
-        return model.CreateTableResponseSchema(**data["data"]).id
+        return model.CreateTableResponse(**data["data"]).id
 
     def add_data(self, table_id: int, data: pandas.DataFrame) -> None:
         """
         Add new data to the table created in `create_table` method.
         """
+        request_data = model.AddDataRequest(table_id=table_id, data=data.to_dict("records"))
         _ = self._request(
             "POST",
             "/admin/api/v1/table/data",
-            dataclasses.asdict(model.AddDataRequestSchema(table_id, data.to_dict("records"))),
+            request_data.model_dump(),
         )
 
     def start_processing(self, table_id: int) -> None:
@@ -98,57 +99,24 @@ class HyperLedaClient:
         _ = self._request(
             "POST",
             "/admin/api/v1/table/process",
-            dataclasses.asdict(model.TableProcessRequestSchema(table_id)),
+            {"table_id": table_id},
         )
-
-    def get_table_status_stats(self, table_id: int) -> model.TableStatusStatsResponseSchema:
-        """
-        Get statistics of cross identification of the table. Shows the total number of objects
-        in each status.
-        """
-        data = self._request(
-            "GET",
-            "/admin/api/v1/table/status/stats",
-            query={"table_id": str(table_id)},
-        )
-        return model.TableStatusStatsResponseSchema(**data["data"])
-
-    def set_table_status(self, table_id: int, overrides: list[model.Overrides] | None = None) -> None:
-        """
-        Moves objects that were cross identified successfully to the homogenous part of the
-        database. If `overrides` is provided, will manually set status the provided object.
-        """
-        _ = self._request(
-            "POST",
-            "/admin/api/v1/table/status",
-            dataclasses.asdict(model.SetTableStatusRequestSchema(table_id, overrides)),
-        )
-
-    def validate_table(self, table_name: str) -> model.GetTableValidationResponseSchema:
-        """
-        Validate the table data. Checks if all objects were cross-identified and if there are
-        any duplicates.
-        """
-        data = self._request(
-            "GET",
-            "/admin/api/v1/table/validation",
-            query={"table_name": str(table_name)},
-        )
-        return model.GetTableValidationResponseSchema(**data["data"])
 
     def patch_table_schema(self, table_name: str, actions: list) -> None:
         """
         Patch table schema with provided actions. For example, change UCD or unit of the column.
         """
+        request_data = model.PatchTableRequest(table_name=table_name, actions=actions)
         _ = self._request(
             "PATCH",
             "/admin/api/v1/table",
-            dataclasses.asdict(model.PatchTableRequestSchema(table_name, actions)),
+            request_data.model_dump(),
         )
 
-    def create_marking(self, table_name: str, rules: list[model.Catalog]) -> None:
+    def create_marking(self, table_name: str, rules: list[model.CatalogToMark]) -> None:
+        request_data = model.CreateMarkingRequest(table_name=table_name, catalogs=rules)
         _ = self._request(
             "POST",
             "/admin/api/v1/marking",
-            dataclasses.asdict(model.CreateMarkingRequestSchema(table_name, rules)),
+            request_data.model_dump(),
         )

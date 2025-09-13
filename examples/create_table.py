@@ -9,31 +9,31 @@ client = hyperleda.HyperLedaClient(endpoint=hyperleda.TEST_ENDPOINT)
 table_name = f"test_table_{random.randrange(0, 100000)}"
 
 table_id = client.create_table(
-    hyperleda.CreateTableRequestSchema(
+    hyperleda.CreateTableRequest(
         table_name=table_name,
         columns=[
             hyperleda.ColumnDescription(
                 name="ra",
-                data_type=hyperleda.DataType("double"),
+                data_type=hyperleda.DatatypeEnum.double,
                 ucd="pos.eq.ra",
                 unit="deg",
                 description="Right ascension",
             ),
             hyperleda.ColumnDescription(
                 name="dec",
-                data_type=hyperleda.DataType("double"),
+                data_type=hyperleda.DatatypeEnum.double,
                 ucd="pos.eq.dec",
                 unit="deg",
                 description="Declination",
             ),
             hyperleda.ColumnDescription(
                 name="id",
-                data_type=hyperleda.DataType.str,
+                data_type=hyperleda.DatatypeEnum.str,
                 ucd="meta.id;meta.main",
             ),
             hyperleda.ColumnDescription(
                 name="obscure_column",
-                data_type=hyperleda.DataType.float,
+                data_type=hyperleda.DatatypeEnum.float,
             ),
         ],
         bibcode="1992ApJ...400L...1W",
