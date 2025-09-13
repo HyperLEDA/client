@@ -37,6 +37,8 @@ table_id = client.create_table(
             ),
         ],
         bibcode="1992ApJ...400L...1W",
+        datatype=hyperleda.DataType.regular,
+        description="",
     )
 )
 
@@ -55,3 +57,15 @@ data = pandas.DataFrame(
 
 client.add_data(table_id, data)
 print(f"Added data to the table '{table_name}':\n{data}")
+
+table_info = client.get_table(table_name)
+print(f"\nTable information for '{table_name}':")
+print(f"  ID: {table_info.id}")
+print(f"  Description: {table_info.description}")
+print(f"  Number of rows: {table_info.rows_num}")
+print(f"  Number of columns: {len(table_info.column_info)}")
+print("  Columns:")
+for col in table_info.column_info:
+    print(f"    - {col.name} ({col.data_type}) - {col.description or 'No description'}")
+if table_info.statistics:
+    print(f"  Statistics: {table_info.statistics}")

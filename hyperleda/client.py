@@ -120,3 +120,12 @@ class HyperLedaClient:
             "/admin/api/v1/marking",
             request_data.model_dump(),
         )
+
+    def get_table(self, table_name: str) -> model.GetTableResponse:
+        data = self._request(
+            "GET",
+            "/admin/api/v1/table",
+            query={"table_name": table_name},
+        )
+
+        return model.GetTableResponse(**data["data"])
